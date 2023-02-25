@@ -12,7 +12,7 @@ db.sequelize.sync();
 app.use('/api',quizRouter)
 
 app.get('/', (req, res, next) => {
-  res.send(`Server started listening at http://localhost:${port}`)
+  res.send(`Server started`)
 })
 
 const PORT = process.env.PORT || 3000;
