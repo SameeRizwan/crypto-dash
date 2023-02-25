@@ -14,6 +14,10 @@ db.sequelize.sync();
 
 app.use('/api',quizRouter)
 
+app.get('/', (req, res, next) => {
+  res.send(`Server started listening at http://localhost:${port}`)
+})
+
 app.listen(port, () => {
-  console.log(`Servern started listening at http://localhost:${port}`)
+  console.log(`Server started listening at http://localhost:${port}`)
 })
