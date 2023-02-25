@@ -29,24 +29,41 @@ db.sequelize = sequelize;
 const Question = require("./Model/question")(sequelize);
 const Quiz = require("./Model/quiz")(sequelize);
 const Option = require("./Model/option")(sequelize);
-
+const Submission = require("./Model/submission")(sequelize);
+const SubmissionAnswer = require("./Model/submissionAnswer")(sequelize);
 
 Quiz.hasMany(Question, { as: "questions" });
 
 Option.belongsTo(Question, {
-    foreignKey: "QuestionId",
+    foreignKey: "questionId",
     as: "question",
 });
 
 Question.hasMany(Option, { as: "options" });
 
 Question.belongsTo(Quiz, {
-  foreignKey: "QuizId",
+  foreignKey: "quizId",
   as: "quiz",
+});
+
+Submission.belongsTo(Quiz, {
+  foreignKey: "quizId",
+  as: "quiz",
+});
+
+SubmissionAnswer.belongsTo(Submission, {
+  foreignKey: "submissionId",
+  as: "submission",
+});
+
+SubmissionAnswer.belongsTo(Question, {
+  foreignKey: "questionId",
+  as: "question",
 });
 
 db.Question = Question 
 db.Option = Option 
 db.Quiz = Quiz 
-
+db.Submission = Submission 
+db.SubmissionAnswer = SubmissionAnswer 
 module.exports = db;

@@ -8,5 +8,9 @@ router
   .post("/quiz/draft", quizController.saveAsDraftQuiz)
   .get("/quiz/:id", quizController.getQuiz);
   // .delete("/quiz/:id", quizController.deleteQuiz);
+  // .get("/quiz/:userId", quizController.getAllUserQuizs)
+
+router
+.post("/quiz/submit", quizController.submitQuiz)
 
 module.exports = router;

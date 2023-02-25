@@ -2,10 +2,11 @@ const db = require('../db')
 const Quiz = db.Quiz
 const Question = db.Question
 const Option = db.Option
+const Submission = db.Submission
+const SubmissionAnswer = db.SubmissionAnswer
 const RESPONSE_CODE = require('../Utils/response')
 
 createAndPublishQuiz = async (req, res, next) => {
-
     try {
         const quiz = await Quiz.create({
             name: req.body.name,
@@ -31,14 +32,13 @@ saveAsDraftQuiz = async (req, res, next) => {
             userId: req.body.userId
         });
 
-        saveQuestion(req.body.Question, quiz)
+        saveQuestion(req.body.Question, quiz.dataValues)
         res.status(RESPONSE_CODE[200]).json({ success: "true", error: "null", data: "null" })
 
     }
     catch (err) {
         res.status(RESPONSE_CODE[500]).json({ success: "false", error: err.message, data: "null" })
     }
-
 }
 
 getAllQuiz = async (req, res, next) => {
@@ -55,9 +55,8 @@ getAllQuiz = async (req, res, next) => {
                 name: quiz.dataValues.name,
                 description: quiz.dataValues.description,
                 active: quiz.dataValues.active,
-                Question: quizDetail
+                question: quizDetail
             }
-            console.log(data)
             return data
         }))
         res.status(RESPONSE_CODE[200]).json({ success: "true", error: "null", data: allQuizes })
@@ -78,7 +77,7 @@ getQuiz = async (req, res, next) => {
             name: quiz.dataValues.name,
             description: quiz.dataValues.description,
             active: quiz.dataValues.active,
-            Question: quizDetail
+            question: quizDetail
         }
         res.status(RESPONSE_CODE[200]).json({ success: "true", error: "null", data: data })
     }
@@ -92,28 +91,52 @@ getQuestionAndOptions = async (questions) => {
         const options = await Option.findAll({ where: { QuestionId: question.id } })
         const refinedOptions = options.map((option) => {
             return option = {
-                name: option.dataValues.name,
+                description: option.dataValues.description,
                 answer: option.dataValues.answer,
             }
         })
         const refinedQuestion = question.dataValues
         return quizDetail =
         {
-            name: refinedQuestion.name,
+            id: refinedQuestion.id,
+            description: refinedQuestion.description,
             mandatory: refinedQuestion.mandatory,
             option: refinedOptions
         }
     }))
 }
 
+submitQuiz = async (req, res, next) => {
+    try {
+        const quizSubmitted = await Submission.create({
+            userId: req.body.userId,
+            quizId: req.body.quizId,
+            timeTaken: req.body.timeTaken,
+        });
+
+        req.body.Questions.map(async (question) => {
+            await SubmissionAnswer.create({
+                submissionId: quizSubmitted.dataValues.id,
+                questionId: question.id,
+                optionSelected: question.selected
+            });
+        })
+        res.status(RESPONSE_CODE[200]).json({ success: "true", error: "null", data: "Submitted Successfully" })
+    }
+    catch (err) {
+        res.status(RESPONSE_CODE[500]).json({ success: "false", error: err.message, data: "null" })
+    }
+
+}
+
 saveQuestion = (questions, quiz) => {
+
     try {
         questions.map(async (question) => {
-
             const savedQuestion = await Question.create({
-                name: question.name,
+                description: question.description,
                 mandatory: question.mandatory,
-                QuizId: quiz.id
+                quizId: quiz.id
             });
 
             const options = question.option;
@@ -130,9 +153,9 @@ saveOptions = (options, savedQuestion) => {
     try {
         options.map(async (option) => {
             await Option.create({
-                name: option.name,
+                description: option.description,
                 answer: option.answer,
-                QuestionId: savedQuestion.id
+                questionId: savedQuestion.id
             });
         })
     }
@@ -141,9 +164,12 @@ saveOptions = (options, savedQuestion) => {
     }
 }
 
+
+
 module.exports = {
     createAndPublishQuiz,
     saveAsDraftQuiz,
     getAllQuiz,
     getQuiz,
+    submitQuiz
 };
