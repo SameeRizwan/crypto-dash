@@ -67,6 +67,26 @@ getAllQuiz = async (req, res, next) => {
     }
 }
 
+getQuiz = async (req, res, next) => {
+    try {
+        let quizDetail = {}
+
+        const quiz = await Quiz.findByPk(req.params.id);
+        const questions = await Question.findAll({ where: { QuizId: quiz.id } })
+        quizDetail = await getQuestionAndOptions(questions)
+        let data = {
+            name: quiz.dataValues.name,
+            description: quiz.dataValues.description,
+            active: quiz.dataValues.active,
+            Question: quizDetail
+        }
+        res.status(RESPONSE_CODE[200]).json({ success: "true", error: "null", data: data })
+    }
+    catch (err) {
+        res.status(RESPONSE_CODE[500]).json({ success: "false", error: err.message, data: "null" })
+    }
+}
+
 getQuestionAndOptions = async (questions) => {
     return quizDetail = await Promise.all(questions.map(async (question) => {
         const options = await Option.findAll({ where: { QuestionId: question.id } })
@@ -125,4 +145,5 @@ module.exports = {
     createAndPublishQuiz,
     saveAsDraftQuiz,
     getAllQuiz,
+    getQuiz,
 };
