@@ -48,19 +48,24 @@ getAllQuiz = async (req, res, next) => {
         
         const quizes = await Quiz.findAll();
 
+
+        console.log(quizes)
+
         quizes.map(async (quiz) => {            
             const questions = await Question.findAll({where: {QuizId:quiz.id}})
             questions.map(async (question) => {
                 const options = await Option.findAll({where: {QuestionId:question.id}})
                 const quizValue = quiz.dataValues
                 
+                console.log(quizDetail)
+
                 quizDetail = {
                     Question:[
                         question.dataValues,
                         options.dataValues
                     ]
                 }
-                console.log(options)
+                console.log(options.dataValues)
             })
         })
 
@@ -77,9 +82,9 @@ getQuiz = async (req, res, next) => {
 
 }
 
-saveQuestion = (questions) => {
+saveQuestion = (questions,quiz) => {
     try {
-        questions.map(async (question,quiz) => {
+        questions.map(async (question) => {
 
             const savedQuestion = await Question.create({
                 name: question.name,
