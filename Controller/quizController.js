@@ -49,7 +49,7 @@ getAllQuiz = async (req, res, next) => {
         const quizes = await Quiz.findAll();
 
         allQuizes = await Promise.all(quizes.map(async (quiz) => {
-            const questions = await Question.findAll({ where: { QuizId: quiz.id } })
+            const questions = await Question.findAll({ where: { quizId: quiz.id } })
             quizDetail = await getQuestionAndOptions(questions)
             let data = {
                 name: quiz.dataValues.name,
@@ -71,7 +71,7 @@ getQuiz = async (req, res, next) => {
         let quizDetail = {}
 
         const quiz = await Quiz.findByPk(req.params.id);
-        const questions = await Question.findAll({ where: { QuizId: quiz.id } })
+        const questions = await Question.findAll({ where: { quizId: quiz.id } })
         quizDetail = await getQuestionAndOptions(questions)
         let data = {
             name: quiz.dataValues.name,
@@ -82,17 +82,17 @@ getQuiz = async (req, res, next) => {
         res.status(RESPONSE_CODE[200]).json({ success: "true", error: "null", data: data })
     }
     catch (err) {
-        res.status(RESPONSE_CODE[500]).json({ success: "false", error: err.message, data: "null" })
+        res.status(RESPONSE_CODE[500]).json({ success: "false", error: "Quiz Not Found", data: "null" })
     }
 }
 
 getQuestionAndOptions = async (questions) => {
     return quizDetail = await Promise.all(questions.map(async (question) => {
-        const options = await Option.findAll({ where: { QuestionId: question.id } })
+        const options = await Option.findAll({ where: { questionId: question.id } })
         const refinedOptions = options.map((option) => {
             return option = {
                 description: option.dataValues.description,
-                answer: option.dataValues.answer,
+                correctAnswer: option.dataValues.correctAnswer,
             }
         })
         const refinedQuestion = question.dataValues
@@ -115,10 +115,12 @@ submitQuiz = async (req, res, next) => {
         });
 
         req.body.Questions.map(async (question) => {
+            const correctOption = await getCorrectOption(question)
             await SubmissionAnswer.create({
                 submissionId: quizSubmitted.dataValues.id,
                 questionId: question.id,
-                optionSelected: question.selected
+                optionSelected: question.selected,
+                correctOptionId: correctOption.id
             });
         })
         res.status(RESPONSE_CODE[200]).json({ success: "true", error: "null", data: "Submitted Successfully" })
@@ -129,8 +131,14 @@ submitQuiz = async (req, res, next) => {
 
 }
 
-saveQuestion = (questions, quiz) => {
 
+getCorrectOption = async(question) => {
+    const option = await Option.findOne({ where: { questionId: question.id, correctAnswer: '1' } })
+    return option.dataValues;
+}
+
+
+saveQuestion = (questions, quiz) => {
     try {
         questions.map(async (question) => {
             const savedQuestion = await Question.create({
@@ -148,13 +156,12 @@ saveQuestion = (questions, quiz) => {
     }
 }
 
-
 saveOptions = (options, savedQuestion) => {
     try {
         options.map(async (option) => {
             await Option.create({
                 description: option.description,
-                answer: option.answer,
+                correctAnswer: option.correctAnswer,
                 questionId: savedQuestion.id
             });
         })
