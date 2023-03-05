@@ -48,46 +48,6 @@ Quick start options:
 1. Download and Install NodeJs LTS version from [NodeJs Official Page](https://nodejs.org/en/download/).
 2. Navigate to the root / directory and run npm install or (yarn install, if you're using yarn) to install our local dependencies.
 
-## Documentation
-
-Muse Ant Design Dashboard build using Material Tailwind and the documentation of Material Tailwind is hosted at [website](https://demos.creative-tim.com/muse-ant-design-dashboard/#/docs/overview?ref=readme-madd).
-
-### What's included
-
-Within the download you'll find the following directories and files:
-
-```
-Muse Ant Design Dashboard
-    ├── muse-ant-design-dashboard
-    │   ├── public
-    │   │   ├── index.html
-    │   │   ├── favicon.png
-    │   │   ├── minifest.json
-    │   │   └── robots.txt
-    │   ├── src
-    │   │   ├── assets
-    │   │   │   ├── images
-    │   │   │   └── styles
-    │   │   ├── components
-    │   │   │   ├── chart
-    │   │   │   └── layout
-    │   │   ├── pages
-    │   │   │   ├── Billing.js
-    │   │   │   ├── Home.js
-    │   │   │   ├── Profile.js
-    │   │   │   ├── Rtl.js
-    │   │   │   ├── SignIn.js
-    │   │   │   ├── SignUp.js
-    │   │   │   └── Tables.js
-    │   │   ├── App.js
-    │   │   └── index.js
-    │   ├── CHANGELOG.md
-    │   ├── LICENSE
-    │   ├── package.json
-    │   ├── README.md
-    │   ├── .env
-```
-
 ## Browser Support
 
 At present, we officially aim to support the last two versions of the following browsers:
