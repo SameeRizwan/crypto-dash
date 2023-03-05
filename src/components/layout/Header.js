@@ -299,7 +299,7 @@ function Header({
             width={360}
             onClose={hideDrawer}
             placement={placement}
-            visible={visible}>
+            open={visible}>
           </Drawer>
           <Link to="/sign-in" className="btn-sign-in">
             {profile}
