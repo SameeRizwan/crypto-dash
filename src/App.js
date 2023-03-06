@@ -10,6 +10,7 @@ import 'antd/dist/antd.js';
 import 'antd/dist/antd.min.js';
 import "./assets/styles/main.css";
 import "./assets/styles/responsive.css";
+import Account from "./pages/Account";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/sign-in" element={<SignIn />} />
         <Route exact path="/" element={<Main><Home /></Main>} />       
         <Route exact path="/profile" element={<Main><Profile /></Main>} />
+        <Route exact path="/account" element={<Main><Account /></Main>} />
       </Routes>
     </div>
   );

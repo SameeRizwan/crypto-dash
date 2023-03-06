@@ -7,12 +7,6 @@ import {
   Avatar,
 } from "antd";
 
-import {
-  FacebookOutlined,
-  TwitterOutlined,
-  InstagramOutlined,
-} from "@ant-design/icons";
-
 import BgProfile from "../assets/images/bg-profile.jpg";
 import profilavatar from "../assets/images/face-1.jpg";
 
@@ -75,7 +69,7 @@ function Profile() {
       ></Card>
 
       <Row gutter={[24, 0]}>
-        <Col span={24} md={18} className="mb-24">
+        <Col md={24} className="mb-24">
           <Card
             bordered={false}
             title={<h6 className="font-semibold m-0">Profile Information</h6>}
@@ -103,17 +97,6 @@ function Profile() {
               </Descriptions.Item>
               <Descriptions.Item label="Location" span={3}>
                 USA
-              </Descriptions.Item>
-              <Descriptions.Item label="Social" span={3}>
-                <a href="#pablo" className="mx-5 px-5">
-                  {<TwitterOutlined />}
-                </a>
-                <a href="#pablo" className="mx-5 px-5">
-                  {<FacebookOutlined style={{ color: "#344e86" }} />}
-                </a>
-                <a href="#pablo" className="mx-5 px-5">
-                  {<InstagramOutlined style={{ color: "#e1306c" }} />}
-                </a>
               </Descriptions.Item>
             </Descriptions>
           </Card>
